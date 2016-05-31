@@ -37,7 +37,7 @@ public class MainFrame extends ApplicationAdapter {
 	private int frametimeBufferSize = 140;
 	private int targetFps = 60;
     private long previousTime = TimeUtils.nanoTime();
-    private Orb currentTestOrb;
+    private Actor currentTestOrb;
 	
 	@Override
 	public void create () {
@@ -146,6 +146,19 @@ public class MainFrame extends ApplicationAdapter {
 		but.setBounds(600, 1000, 250, 80);
 		stage.addActor(but);
 		but = new TextButton("Reaction Time Testing", style);
+		but.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if(currentTestOrb == null){
+					currentTestOrb = new ReactionTest();
+					stage.addActor(currentTestOrb);
+				}else if(!(currentTestOrb instanceof ReactionTest)){
+					currentTestOrb.remove();
+					currentTestOrb = new ReactionTest();
+					stage.addActor(currentTestOrb);
+				}
+			}
+		});
 		but.setBounds(840, 1000, 250, 80);
 		stage.addActor(but);
 		but = new TextButton("Aim Testing", style);
