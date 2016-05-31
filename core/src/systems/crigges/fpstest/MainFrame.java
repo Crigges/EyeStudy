@@ -10,12 +10,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -33,7 +37,7 @@ public class MainFrame extends ApplicationAdapter {
 	private int frametimeBufferSize = 140;
 	private int targetFps = 60;
     private long previousTime = TimeUtils.nanoTime();
-    private MazeRunner orb;
+    private Orb currentTestOrb;
 	
 	@Override
 	public void create () {
@@ -45,15 +49,15 @@ public class MainFrame extends ApplicationAdapter {
 		stage = new Stage(viewport);
 		addFpsCounter();
 		addFrameSlider();
-		orb = new MazeRunner();
-		stage.addActor(orb);
-		addOrbSlider();
+		addOptionButtons();
 		addVsyncSlider();
-		System.out.println(Gdx.graphics.getWidth());
 		Gdx.input.setInputProcessor(stage);
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor()));
 	}
 	
+
+	
+
 
 	@Override
 	public void render() {
@@ -81,26 +85,6 @@ public class MainFrame extends ApplicationAdapter {
 	      previousTime = TimeUtils.nanoTime();
 	    }
 	}
-//	
-//	public void delay() {
-//        currentTime = TimeUtils.nanoTime();
-//        deltaTime += currentTime - previousTime;
-//        while (deltaTime < 1000000000 / targetFps) {
-//            previousTime = currentTime;
-//            long diff = (long) (1000000000 / targetFps - deltaTime);
-//            if (diff / 1000000 > 1) {
-//                try {
-//                    Thread.sleep(diff / 1000000 - 1);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            currentTime = TimeUtils.nanoTime();
-//            deltaTime += currentTime - previousTime;
-//            previousTime = currentTime;
-//        }
-//        deltaTime -= 1000000000 / targetFps;
-//    }
 	
 	@Override
 	public void resize(int width, int height) {
@@ -133,34 +117,53 @@ public class MainFrame extends ApplicationAdapter {
 			public void changed(ChangeEvent event, Actor actor) {
 				targetFps = (int) slider.getValue();
 				l.setText("Target Fps: " + targetFps);
-				frametimeBufferSize = (int) slider.getValue() * 10;
+				frametimeBufferSize = (int) slider.getValue();
 			}
 		});
 		stage.addActor(l);
 		stage.addActor(slider);
 	}
 	
-	private void addOrbSlider(){
-		SliderStyle style = new SliderStyle();
-		style.knob = AssetFactory.getTextureDrawable("slider");
-		style.background = AssetFactory.getTextureDrawable("sliderbg");
-		style.knobBefore = AssetFactory.getTextureDrawable("sliderfilled");
-		final Slider slider = new Slider(0, 10, 0.01f, false, style);
-		slider.setValue(0.4f);
-		slider.setBounds(100, 100, 500, 20);
-		slider.setDisabled(false);
-		final Label l = new Label("Orb Speed: 0.4", new LabelStyle(AssetFactory.getFont("normal", 20, 0), Color.SKY));
-		l.setBounds(400, 70, 0, 0);
-		slider.addListener(new ChangeListener() {
-			
+	private void addOptionButtons() {
+		TextButtonStyle style = new TextButtonStyle();
+		style.font = AssetFactory.getFont("normal", 20, 0);
+		style.fontColor = Color.BLACK;
+		style.up = AssetFactory.getTextureDrawable("button");
+		TextButton but = new TextButton("Orb Testing", style);
+		but.addListener(new ClickListener(){
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				orb.setSpeed(slider.getValue());
-				l.setText("Orb Speed: " + String.format("%.2f", slider.getValue()));
+			public void clicked(InputEvent event, float x, float y) {
+				if(currentTestOrb == null){
+					currentTestOrb = new CirclingOrb();
+					stage.addActor(currentTestOrb);
+				}else if(!(currentTestOrb instanceof CirclingOrb)){
+					currentTestOrb.remove();
+					currentTestOrb = new CirclingOrb();
+					stage.addActor(currentTestOrb);
+				}
 			}
 		});
-		stage.addActor(l);
-		stage.addActor(slider);
+		but.setBounds(600, 1000, 250, 80);
+		stage.addActor(but);
+		but = new TextButton("Reaction Time Testing", style);
+		but.setBounds(840, 1000, 250, 80);
+		stage.addActor(but);
+		but = new TextButton("Aim Testing", style);
+		but.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if(currentTestOrb == null){
+					currentTestOrb = new ChaseOrb();
+					stage.addActor(currentTestOrb);
+				}else if(!(currentTestOrb instanceof ChaseOrb)){
+					currentTestOrb.remove();
+					currentTestOrb = new ChaseOrb();
+					stage.addActor(currentTestOrb);
+				}
+			}
+		});
+		but.setBounds(1080, 1000, 250, 80);
+		stage.addActor(but);
 	}
 	
 	

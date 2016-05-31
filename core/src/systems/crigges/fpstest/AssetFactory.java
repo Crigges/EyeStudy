@@ -33,6 +33,7 @@ public class AssetFactory {
 		addTexture("sliderbg", "sliderbg.png");
 		addTexture("sliderfilled", "sliderfilled.png");
 		addTexture("runner", "orb1.png");
+		addTexture("button", "warning_message.png");
 	}
 	
 	public static Drawable getTextureDrawable(String name){
