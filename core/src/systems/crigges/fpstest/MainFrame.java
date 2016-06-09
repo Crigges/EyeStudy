@@ -210,12 +210,12 @@ public class MainFrame extends ApplicationAdapter {
 	}
 	
 	private void addFpsCounter(){
-		final Label l = new Label("Fps: 0", new LabelStyle(AssetFactory.getFont("normal", 50, 0), Color.YELLOW));
+		final Label l = new Label("Fps: 0", new LabelStyle(AssetFactory.getFont("normal", 40, 0), Color.YELLOW));
 		l.addAction(new Action() {
 			
 			@Override
 			public boolean act(float delta) {
-				l.setText("Fps: " + Gdx.graphics.getFramesPerSecond() + "  |  "+ + (int)(1f / (currentTotalFrametime / frametimeBufferSize)));
+				l.setText("Fps: " + Gdx.graphics.getFramesPerSecond() + "  |  "+ + (int)(1f / (currentTotalFrametime / frametimeBufferSize)) + "\n@" + Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor()).refreshRate + "Hz");
 				//l.setText("Fps: " + (int)(1f / (currentTotalFrametime / frametimeBufferSize)));
 				return false;
 			}

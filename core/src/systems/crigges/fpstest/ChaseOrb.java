@@ -253,7 +253,7 @@ public class ChaseOrb extends Orb{
 			targetTimer.clear();
 			targetTimer.stop();
 		}
-		startLabel.setText("Click to Start!");
+		startLabel.setText("Click to Start!\nTry to hold your cursor above the Orb");
 		img.setBounds(1920 / 2 - scale / 2, 1080 / 2 - scale / 2, scale, scale);
 	}
 	
@@ -279,7 +279,7 @@ public class ChaseOrb extends Orb{
 	}
 	
 	private void addStartLabel(){
-		startLabel = new Label("Click to Start", new LabelStyle(AssetFactory.getFont("normal", 25, 0), Color.SKY));
+		startLabel = new Label("Click to Start!\nTry to hold your cursor above the Orb", new LabelStyle(AssetFactory.getFont("normal", 25, 0), Color.SKY));
 		startLabel.setAlignment(Align.center);
 		startLabel.setBounds(1920 / 2, 1080 / 2 - 110, 0, 0);
 	}
